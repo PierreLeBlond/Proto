@@ -7,9 +7,9 @@ public class SpriteState : MonoBehaviour {
 
     public Sprite[] _sprites;
 
-    private Sprite _currentSprite;
+    protected Sprite _currentSprite;
 
-    private int _state;
+    protected int _state;
 
     public void SetState(int state)
     {

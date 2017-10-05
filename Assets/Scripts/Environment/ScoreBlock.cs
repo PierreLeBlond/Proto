@@ -54,9 +54,18 @@ public class ScoreBlock : MonoBehaviour {
 
     public void SpamNote() {
         Clean();
-        _note.transform.localPosition = new Vector3(0.0f, Random.Range(-6, 6)/2.0f, 0.0f);
+        int level = Random.Range(-6, 6);
+        _note.transform.localPosition = new Vector3(0.0f, level/2.0f, 0.0f);
         int state = Random.Range(0, 2);
-        _note.GetComponent<SpriteState>().SetState(state);
+        int note = (level + 6) % 7;
+
+        if(state != 0)
+        {
+            while(note == ((level + 6) % 7))
+                note = Random.Range(0, 7);
+        }
+
+        _note.GetComponent<SpriteState>().SetState(note);
         _note.SetRightness(state == 0);
         _note.gameObject.SetActive(true);
     }

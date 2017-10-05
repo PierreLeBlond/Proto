@@ -22,7 +22,7 @@ public class Score : MonoBehaviour {
             if(_blocks[i].transform.position.x < -12.0f)
             {
                 _blocks[i].transform.localPosition = new Vector3(12.0f, 0.0f, 0.0f);
-                if(player.getState() < 2 && Random.Range(0, 10) == 0)
+                if(player.getState() < player.getMaxState() && Random.Range(0, 10) == 0)
                     _blocks[i].SpamBonus(player.getState());
                 else
                     _blocks[i].SpamNote();

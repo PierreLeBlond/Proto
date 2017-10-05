@@ -4,9 +4,10 @@ using System.Collections;
 
 public class Count : MonoBehaviour {
 
-    public Text _text;
+    public Text                    text;
+    public Transform               mask;
 
-    private int _count = 0;
+    private int                    _count = 0;
 
     public void Add() {
         _count++;
@@ -14,11 +15,13 @@ public class Count : MonoBehaviour {
     }
 
     public void Update() {
-        _text.text = _count.ToString();
+        text.text = _count.ToString();
+        mask.localPosition = new Vector2((float)_count/5.0f, 0.0f);
     }
 
     public void Reset() {
         _count = 0;
+        mask.localPosition = new Vector2(0.0f, 0.0f);
         Update();
     }
 }

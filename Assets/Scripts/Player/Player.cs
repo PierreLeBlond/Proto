@@ -3,29 +3,42 @@ using System.Collections;
 
 public class Player : MonoBehaviour {
 
-    public Count count;
+    public Count                    count;
 
-    public GameManager gameManager;
+    public GameManager              gameManager;
 
-    public Score score;
+    public Score                    score;
 
-    public Rigidbody2D body;
+    public Rigidbody2D              body;
 
-    public ParticleSystem particles;
+    private SpriteState             _spriteState;
+    private SpriteState             _smokeState;
 
-    private PlayerState[] _states = new PlayerState[3];
-    private PlayerState _currentState;
+    private PlayerState[]           _states = new PlayerState[4];
+    private PlayerState             _currentState;
 
-    private int _currentStateId;
+    private int                     _currentStateId;
+    private int                     _maxStateId;
 
     void Start() {
 
-        _states[0] = new PlayerJumpState(body);
-        _states[0].SetParticleSystem(particles);
-        _states[1] = new PlayerJetpackState(body);
-        _states[1].SetParticleSystem(particles);
-        _states[2] = new PlayerRocketState(body);
-        _states[2].SetParticleSystem(particles);
+        _spriteState = GetComponent<SpriteState>();
+        _smokeState = GetComponent<SmokeState>();
+
+        for(int i = 0; i < _states.Length; ++i)
+        {
+            _states[i] = new PlayerState();
+            _states[i].sprite = _spriteState;
+            _states[i].smoke = _smokeState;
+            _states[i].spriteId = i;
+        }
+
+        _maxStateId = _states.Length - 1;
+
+        _states[0].control = new Jump(body);
+        _states[1].control = new Jetpack(body);
+        _states[2].control = new Rocket(body);
+        _states[3].control = new God(body, this);
 
         SetState(1);
     }
@@ -43,13 +56,17 @@ public class Player : MonoBehaviour {
         {
             SetState(2);
         }
+        else if(Input.GetKeyDown("4"))
+        {
+            SetState(3);
+        }
 
         _currentState.Update();
     }
 
     void OnTriggerEnter2D(Collider2D intruder)
     {
-        if(intruder.CompareTag("Collectable"))
+        if(intruder.CompareTag("Collectable") && _currentStateId != 3)
             intruder.GetComponent<Collectable>().Activate(this);
     }
 
@@ -59,12 +76,14 @@ public class Player : MonoBehaviour {
 
         _currentState = _states[_currentStateId];
         _currentState.Init();
-
-        GetComponent<SpriteState>().SetState(_currentStateId);
     }
 
     public int getState() {
         return _currentStateId;
+    }
+
+    public int getMaxState() {
+        return _maxStateId;
     }
 
     public void AddPoint() {
@@ -84,11 +103,15 @@ public class Player : MonoBehaviour {
     }
 
     public void LevelUp() {
-        if(_currentStateId < 2)
+        if(_currentStateId < _maxStateId)
         {
             SetState(_currentStateId + 1);
             score.Clean();
         }
+    }
+
+    public void SetLevel(int level) {
+        SetState(level);
     }
 
     public void GameOver() {
