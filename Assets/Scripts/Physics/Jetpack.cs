@@ -12,6 +12,7 @@ public class Jetpack : Control {
     public override void Init()
     {
         _body.gravityScale = 1.0f;
+        _body.transform.eulerAngles = new Vector3(0, 0, 0);
     }
 
     public override void Update() {

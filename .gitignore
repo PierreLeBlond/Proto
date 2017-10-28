@@ -1,0 +1,7 @@
+Library/
+Temp/
+
+**/*.meta
+
+/Assembly-CSharp.csproj
+/Proto.sln

@@ -29,6 +29,7 @@ public class Jump : Control {
 
     public override void Init() {
         _body.gravityScale = 1.0f;
+        _body.transform.eulerAngles = new Vector3(0, 0, 0);
     }
 
     public void Launch() {
@@ -65,7 +66,7 @@ public class Jump : Control {
             _phase = Phase.GOINDOWN;
             _body.gravityScale = getGravity(maxHight, speed, fallHalfDistance)/gravity;
         }
-        else if(_phase == Phase.GOINDOWN && _body.position.y <= -3.4f)
+        else if(_phase == Phase.GOINDOWN && _body.position.y <= -2.8f)
         {
             _phase = Phase.SLEEPING;
             _nbJump = 0;

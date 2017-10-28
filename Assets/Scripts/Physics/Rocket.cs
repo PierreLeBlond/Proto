@@ -16,6 +16,7 @@ public class Rocket : Control {
         _body.gravityScale = 0.0f;
         _body.velocity = new Vector2(0.0f, 0.0f);
         _target = new Vector2(0.0f, 0.0f);
+        _body.transform.eulerAngles = new Vector3(0, 0, -90);
     }
 
     public override void Update() {

@@ -3,7 +3,7 @@ using System.Collections;
 
 public class SmokeState : MonoBehaviour {
 
-    public ParticleSystem  _smoke;
+    public ParticleSystem   _smoke;
 
     private int             _state;
 
@@ -14,14 +14,16 @@ public class SmokeState : MonoBehaviour {
           case 0 :
             _smoke.gameObject.SetActive(true);
             _smoke.transform.localPosition = new Vector3(-0.5f, -0.4f, 0.0f);
+            _smoke.Stop();
             break;
           case 1 :
             _smoke.gameObject.SetActive(true);
             _smoke.transform.localPosition = new Vector3(-0.5f, -0.4f, 0.0f);
-            _smoke.Play();
+            _smoke.Stop();
             break;
           case 2 :
             _smoke.gameObject.SetActive(true);
+            _smoke.transform.localPosition = new Vector3(0.25f, -1.5f, 0.0f);
             _smoke.Play();
             break;
           case 3 :
@@ -51,7 +53,7 @@ public class SmokeState : MonoBehaviour {
             }
         }
 
-        if(Input.GetKeyDown(Define.Key) && _state == 1)
+        if(Input.GetKeyUp(Define.Key) && _state == 1)
             _smoke.Stop();
     }
 }

@@ -14,6 +14,9 @@ public class ScoreBlock : MonoBehaviour {
     private Transform[] _lines = new Transform[5];
     private Transform[] _verticalLines = new Transform[2];
 
+    private int minRange = -6;
+    private int maxRange = 6;
+
     void Start() {
 
         for(int i = 0; i < _lines.Length; ++i)
@@ -54,18 +57,19 @@ public class ScoreBlock : MonoBehaviour {
 
     public void SpamNote() {
         Clean();
-        int level = Random.Range(-6, 6);
+        //Height of the spammed note
+        int level = Random.Range(minRange, maxRange);
         _note.transform.localPosition = new Vector3(0.0f, level/2.0f, 0.0f);
         int state = Random.Range(0, 2);
-        int note = (level + 6) % 7;
+        /*int note = (level + 6) % 7;
 
         if(state != 0)
         {
             while(note == ((level + 6) % 7))
                 note = Random.Range(0, 7);
-        }
+        }*/
 
-        _note.GetComponent<SpriteState>().SetState(note);
+        _note.GetComponent<SpriteState>().SetState(state/*note*/);
         _note.SetRightness(state == 0);
         _note.gameObject.SetActive(true);
     }

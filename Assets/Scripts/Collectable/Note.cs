@@ -11,7 +11,6 @@ public class Note : Collectable {
 
     public override void Activate(Player player)
     {
-        Debug.Log(_isRight);
         if(!_isRight)
             player.LevelDown();
         else

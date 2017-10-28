@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour {
         gameOver.SetActive(false);
         pause.SetActive(false);
         menu.SetActive(true);
+        //StartGame();
     }
 
     public void Update() {

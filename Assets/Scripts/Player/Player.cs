@@ -12,7 +12,7 @@ public class Player : MonoBehaviour {
     public Rigidbody2D              body;
 
     private SpriteState             _spriteState;
-    private SpriteState             _smokeState;
+    private SmokeState              _smokeState;
 
     private PlayerState[]           _states = new PlayerState[4];
     private PlayerState             _currentState;
@@ -29,7 +29,7 @@ public class Player : MonoBehaviour {
         {
             _states[i] = new PlayerState();
             _states[i].sprite = _spriteState;
-            _states[i].smoke = _smokeState;
+            _states[i].smoke =  _smokeState;
             _states[i].spriteId = i;
         }
 
