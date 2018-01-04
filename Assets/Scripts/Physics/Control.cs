@@ -3,11 +3,13 @@ using System.Collections;
 
 public class Control {
 
-    protected Rigidbody2D            _body;
+    protected Rigidbody         _body;
+    protected BoxCollider       _mouseCollider;
 
-    public Control(Rigidbody2D body)
+    public Control(Rigidbody body, BoxCollider mouseCollider)
     {
         _body = body;
+        _mouseCollider = mouseCollider;
     }
 
     public virtual void Init() {

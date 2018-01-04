@@ -11,9 +11,9 @@ public class Jump : Control {
 
     public int                  maxJump = 1;
 
-    public float                speed = 3.0f;
+    public float                speed = 4.0f;
     public float                minHight = 2.0f;
-    public float                maxHight = 6.0f;
+    public float                maxHight = 8.0f;
 
     public float                gravity = -9.81f;
 
@@ -25,22 +25,25 @@ public class Jump : Control {
 
     private Phase               _phase = Phase.SLEEPING;
 
-    public Jump(Rigidbody2D body) : base(body) {}
+    private float               _currentGravity;
+
+    public Jump(Rigidbody body, BoxCollider mouseCollider) : base(body, mouseCollider) {}
 
     public override void Init() {
-        _body.gravityScale = 1.0f;
-        _body.transform.eulerAngles = new Vector3(0, 0, 0);
+        _currentGravity = gravity;
+        _body.useGravity = false;
+        _body.transform.localEulerAngles = new Vector3(0, 0, 0);
     }
 
     public void Launch() {
         _nbJump++;
         _phase = Phase.GOINGUP;
-        _body.gravityScale = getGravity(maxHight, speed, maxHalfDistance)/gravity;
-        _body.velocity = new Vector3(0.0f, getInitialVerticalSpeed(maxHight, speed, maxHalfDistance), 0.0f);
+        _currentGravity = getGravity(maxHight, speed, maxHalfDistance);
+        _body.velocity = getInitialVerticalSpeed(maxHight, speed, maxHalfDistance)*_body.transform.up*_body.transform.lossyScale.y;
     }
 
     public void Break() {
-        _body.gravityScale = getGravity(minHight, speed, minHalfDistance)/gravity;
+        _currentGravity = getGravity(minHight, speed, minHalfDistance);
     }
 
     public float getInitialVerticalSpeed(float hight, float horizontalSpeed, float halfDistance) {
@@ -64,13 +67,16 @@ public class Jump : Control {
         if(_phase == Phase.GOINGUP && _body.velocity.y < 0)
         {
             _phase = Phase.GOINDOWN;
-            _body.gravityScale = getGravity(maxHight, speed, fallHalfDistance)/gravity;
+            _currentGravity = getGravity(maxHight, speed, fallHalfDistance);
         }
-        else if(_phase == Phase.GOINDOWN && _body.position.y <= -2.8f)
+        else if(_phase == Phase.GOINDOWN && _body.transform.localPosition.y <= -3.1f)
         {
             _phase = Phase.SLEEPING;
             _nbJump = 0;
         }
+
+        //Apply custom gravity
+        _body.AddForce(_body.transform.up * _body.transform.lossyScale.y * _currentGravity);
     }
 }
 

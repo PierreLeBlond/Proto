@@ -5,65 +5,95 @@ using System.Collections;
 public class GameManager : MonoBehaviour {
 
     public Player                   player;
-    public Score                    score;
+    public ItemManager              itemManager;
     public Count                    count;
 
+    public GameObject               mainMenu;
+
     public GameObject               gameOver;
-    public GameObject               menu;
     public GameObject               pause;
+
+    public Camera                   gameCamera;
+    public Camera                   menuCamera;
 
     private bool                    _gameOver = false;
     private bool                    _play = false;
+    private bool                    _pause = false;
 
     public void Start() {
         PauseGame();
+        itemManager.SpamItems();
         gameOver.SetActive(false);
         pause.SetActive(false);
-        menu.SetActive(true);
-        //StartGame();
     }
 
     public void Update() {
-        if(!_gameOver && Input.GetKeyDown("space"))
-            if(_play)
-                PauseGame();
-            else
-                ResumeGame();
+        if(!_gameOver && Input.GetKeyDown("space")) {
+            if(_play) {
+                Pause();
+            } else {
+                Play();
+            }
+        }
     }
 
-    public void StartGame() {
-        menu.SetActive(false);
-        PlayGame(true);
-    }
-
-    public void RestartGame() {
+    public void Restart() {
         _gameOver = false;
-        score.Clean();
+        itemManager.Clean();
+        itemManager.SpamItems();
         player.SetLevel(1);
         count.Reset();
         gameOver.SetActive(false);
-        StartGame();
+    }
+
+
+    private void PauseGame() {
+        gameCamera.gameObject.SetActive(false);
+        menuCamera.gameObject.SetActive(true);
+        mainMenu.SetActive(true);
+        Time.timeScale = 0.0f;
+    }
+
+    private void PlayGame() {
+        gameCamera.gameObject.SetActive(true);
+        menuCamera.gameObject.SetActive(false);
+        mainMenu.SetActive(false);
+        Time.timeScale = 1.0f;
+    }
+
+    public void Resume() {
+        if(_gameOver) {
+            Restart();
+        } else {
+            _pause = false;
+            pause.SetActive(false);
+        }
+    }
+
+    public void Play() {
+        if(_gameOver) {
+            Restart();
+        } else if(_pause) {
+            Resume();
+        } else {
+            Start();
+        }
+        _play = true;
+        PlayGame();
+    }
+
+    public void Pause() {
+        _play = false;
+        _pause = true;
+        pause.SetActive(true);
+        PauseGame();
     }
 
     public void GameOver() {
-        PlayGame(false);
-        gameOver.SetActive(true);
+        _play = true;
         _gameOver = true;
-    }
-
-    public void PauseGame() {
-        PlayGame(false);
-        pause.SetActive(true);
-    }
-
-    public void ResumeGame() {
-        PlayGame(true);
-        pause.SetActive(false);
-    }
-
-    private void PlayGame(bool play) {
-        _play = play;
-        Time.timeScale = _play ? 1.0f : 0.0f;
+        gameOver.SetActive(true);
+        PauseGame();
     }
 }
 

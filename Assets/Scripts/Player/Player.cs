@@ -7,9 +7,11 @@ public class Player : MonoBehaviour {
 
     public GameManager              gameManager;
 
-    public Score                    score;
+    public ItemManager              itemManager;
 
-    public Rigidbody2D              body;
+    public Rigidbody                body;
+
+    public BoxCollider              mouseCollider;
 
     private SpriteState             _spriteState;
     private SmokeState              _smokeState;
@@ -35,10 +37,10 @@ public class Player : MonoBehaviour {
 
         _maxStateId = _states.Length - 1;
 
-        _states[0].control = new Jump(body);
-        _states[1].control = new Jetpack(body);
-        _states[2].control = new Rocket(body);
-        _states[3].control = new God(body, this);
+        _states[0].control = new Jump(body, mouseCollider);
+        _states[1].control = new Jetpack(body, mouseCollider);
+        _states[2].control = new Rocket(body, mouseCollider);
+        _states[3].control = new God(body, mouseCollider, this);
 
         SetState(1);
     }
@@ -64,10 +66,11 @@ public class Player : MonoBehaviour {
         _currentState.Update();
     }
 
-    void OnTriggerEnter2D(Collider2D intruder)
+    void OnTriggerEnter(Collider intruder)
     {
-        if(intruder.CompareTag("Collectable") && _currentStateId != 3)
+        if(intruder.CompareTag("Collectable") && _currentStateId != 3) {
             intruder.GetComponent<Collectable>().Activate(this);
+        }
     }
 
     void SetState(int state)
@@ -94,7 +97,7 @@ public class Player : MonoBehaviour {
         if(_currentStateId > 0)
         {
             SetState(_currentStateId - 1);
-            score.Clean();
+            itemManager.Clean();
         }
         else
         {
@@ -106,7 +109,7 @@ public class Player : MonoBehaviour {
         if(_currentStateId < _maxStateId)
         {
             SetState(_currentStateId + 1);
-            score.Clean();
+            itemManager.Clean();
         }
     }
 

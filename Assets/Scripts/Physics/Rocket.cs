@@ -5,32 +5,38 @@ using System.Collections;
 public class Rocket : Control {
 
     private Vector2         _target;
-    private float           _mass = 1.0f;
     private float           _slope = 10.0f;
-    private float           _drag = -2.0f;
+    private float           _drag = -5.0f;
 
-    public Rocket(Rigidbody2D body) : base(body){}
+    public Rocket(Rigidbody body, BoxCollider mouseCollider) : base(body, mouseCollider){}
 
     public override void Init()
     {
-        _body.gravityScale = 0.0f;
-        _body.velocity = new Vector2(0.0f, 0.0f);
-        _target = new Vector2(0.0f, 0.0f);
-        _body.transform.eulerAngles = new Vector3(0, 0, -90);
+        _body.useGravity = false;
+        _body.velocity = new Vector3(0.0f, 0.0f, 0.0f);
+        _target = new Vector3(0.0f, 0.0f, 0.0f);
+        _body.transform.localEulerAngles = new Vector3(0, 0, -90);
     }
 
     public override void Update() {
         if(Input.GetKey(Define.Key))
         {
-            float y = (Input.mousePosition.y*10.0f)/Screen.height - 5.0f;
-            _target = new Vector2(_body.position.x, y);
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit raycastHit;
+            if(_mouseCollider.Raycast(ray, out raycastHit, 100.0f)) {
+                Vector3 impact = raycastHit.point;
+                Vector3 center = _mouseCollider.transform.position;
+                Vector3 offset = impact - center;
+                float y = offset.y / _mouseCollider.transform.lossyScale.y;
+                _target = new Vector3(_body.transform.localPosition.x, y, _body.transform.localPosition.z);
+            }
         }
 
-        float distance = _target.y - _body.position.y;
+        float distance = _target.y - _body.transform.localPosition.y;
         float thrust = _slope * distance;
 
         //Physics is awesome !
-        _body.AddForce(new Vector3(0.0f, thrust));
+        _body.AddForce(_body.transform.right * -thrust);
         _body.AddForce(_drag * _body.velocity);
     }
 }

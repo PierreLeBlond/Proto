@@ -12,41 +12,38 @@ public class God : Control {
 
     private Player          _player;
 
-    public God(Rigidbody2D body, Player player) : base(body){
+    public God(Rigidbody body, BoxCollider mouseCollider, Player player) : base(body, mouseCollider){
         _player = player;
     }
 
     public override void Init()
     {
-        _body.gravityScale = 0.0f;
-        _body.velocity = new Vector2(0.0f, 0.0f);
-        _target = new Vector2(0.0f, 0.0f);
-        _body.transform.eulerAngles = new Vector3(0, 0, 0);
+        _body.useGravity = false;
+        _body.velocity = new Vector3(0.0f, 0.0f, 0.0f);
+        _target = new Vector3(0.0f, 0.0f, 0.0f);
+        _body.transform.localEulerAngles = new Vector3(0, 0, 0);
     }
 
     public override void Update() {
         if(Input.GetKey(Define.Key))
         {
-            float y = (Input.mousePosition.y*10.0f)/Screen.height - 5.0f;
-            float x = (Input.mousePosition.x*18.0f)/Screen.width - 9.0f;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit raycastHit;
+            bool hasHit = Physics.Raycast(ray, out raycastHit);
 
-            RaycastHit2D hit = Physics2D.GetRayIntersection(new Ray(new Vector3(x, y, 1),
-                                                                    new Vector3(0, 0, -1)));
-
-            if(hit)
+            if(hasHit)
             {
-                if(hit.collider.CompareTag("Collectable"))
-                    hit.collider.GetComponent<Collectable>().Activate(_player);
+                if(raycastHit.collider.CompareTag("Collectable")) {
+                    raycastHit.collider.GetComponent<Collectable>().Activate(_player);
+                }
             }
-
-            //_target = new Vector2(_body.position.x, y);
         }
 
-        float distance = _target.y - _body.position.y;
+        float distance = _target.y - _body.transform.localPosition.y;
         float thrust = _slope * distance;
 
         //Physics is awesome !
-        _body.AddForce(new Vector3(0.0f, thrust));
+        _body.AddForce(_body.transform.up * thrust);
         _body.AddForce(_drag * _body.velocity);
     }
 }
