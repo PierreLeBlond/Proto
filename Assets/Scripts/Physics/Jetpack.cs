@@ -11,7 +11,7 @@ public class Jetpack : Control {
 
     public override void Init()
     {
-        _body.useGravity = true;
+        _body.GetComponent<Gravity>().enabled = true;
         _body.transform.localEulerAngles = new Vector3(0, 0, 0);
     }
 

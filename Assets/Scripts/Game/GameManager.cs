@@ -5,7 +5,7 @@ using System.Collections;
 public class GameManager : MonoBehaviour {
 
     public Player                   player;
-    public ItemManager              itemManager;
+    public ObjectManager            objectManager;
     public Count                    count;
 
     public GameObject               mainMenu;
@@ -19,10 +19,11 @@ public class GameManager : MonoBehaviour {
     private bool                    _gameOver = false;
     private bool                    _play = false;
     private bool                    _pause = false;
+    private bool                    _hasStarted = false;
 
     public void Start() {
+        Physics.IgnoreLayerCollision(9, 9);
         PauseGame();
-        itemManager.SpamItems();
         gameOver.SetActive(false);
         pause.SetActive(false);
     }
@@ -39,11 +40,15 @@ public class GameManager : MonoBehaviour {
 
     public void Restart() {
         _gameOver = false;
-        itemManager.Clean();
-        itemManager.SpamItems();
+        objectManager.Clear();
+        objectManager.Launch();
         player.SetLevel(1);
         count.Reset();
         gameOver.SetActive(false);
+    }
+
+    public void StartGame() {
+        objectManager.Launch();
     }
 
 
@@ -76,7 +81,7 @@ public class GameManager : MonoBehaviour {
         } else if(_pause) {
             Resume();
         } else {
-            Start();
+            StartGame();
         }
         _play = true;
         PlayGame();
@@ -96,4 +101,3 @@ public class GameManager : MonoBehaviour {
         PauseGame();
     }
 }
-

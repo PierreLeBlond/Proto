@@ -7,7 +7,7 @@ public class Player : MonoBehaviour {
 
     public GameManager              gameManager;
 
-    public ItemManager              itemManager;
+    public ObjectManager            objectManager;
 
     public Rigidbody                body;
 
@@ -66,10 +66,10 @@ public class Player : MonoBehaviour {
         _currentState.Update();
     }
 
-    void OnTriggerEnter(Collider intruder)
+    void OnTriggerEnter(Collider collider)
     {
-        if(intruder.CompareTag("Collectable") && _currentStateId != 3) {
-            intruder.GetComponent<Collectable>().Activate(this);
+        if(collider.gameObject.CompareTag("Collectable") && _currentStateId != 3) {
+            collider.gameObject.GetComponent<Collectable>().Activate(this);
         }
     }
 
@@ -97,7 +97,8 @@ public class Player : MonoBehaviour {
         if(_currentStateId > 0)
         {
             SetState(_currentStateId - 1);
-            itemManager.Clean();
+            objectManager.Clear();
+            objectManager.Launch();
         }
         else
         {
@@ -109,7 +110,8 @@ public class Player : MonoBehaviour {
         if(_currentStateId < _maxStateId)
         {
             SetState(_currentStateId + 1);
-            itemManager.Clean();
+            objectManager.Clear();
+            objectManager.Launch();
         }
     }
 
@@ -122,4 +124,3 @@ public class Player : MonoBehaviour {
     }
 
 }
-

@@ -31,7 +31,7 @@ public class Jump : Control {
 
     public override void Init() {
         _currentGravity = gravity;
-        _body.useGravity = false;
+        _body.GetComponent<Gravity>().enabled = false;
         _body.transform.localEulerAngles = new Vector3(0, 0, 0);
     }
 
@@ -79,4 +79,3 @@ public class Jump : Control {
         _body.AddForce(_body.transform.up * _body.transform.lossyScale.y * _currentGravity);
     }
 }
-

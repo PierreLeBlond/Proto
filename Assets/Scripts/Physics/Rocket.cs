@@ -12,7 +12,7 @@ public class Rocket : Control {
 
     public override void Init()
     {
-        _body.useGravity = false;
+        _body.GetComponent<Gravity>().enabled = false;
         _body.velocity = new Vector3(0.0f, 0.0f, 0.0f);
         _target = new Vector3(0.0f, 0.0f, 0.0f);
         _body.transform.localEulerAngles = new Vector3(0, 0, -90);
