@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class ObjectManager : MonoBehaviour {
-    public ObjectSpammer            spammer;
+    public ObjectSpammer[]            spammers;
 
     private bool                    _spam = false;
 
@@ -14,7 +14,7 @@ public class ObjectManager : MonoBehaviour {
 
     private IEnumerator LaunchSpammer(float waitingTime) {
         while(_spam) {
-            spammer.Launch();
+            spammers[Random.Range(0, spammers.Length)].Launch();
             float timeOffset = Random.Range(0.2f, 1.0f);
             yield return new WaitForSeconds(waitingTime*timeOffset);
         }
@@ -25,6 +25,8 @@ public class ObjectManager : MonoBehaviour {
     }
 
     public void Clear() {
-        spammer.ClearAll();
+        foreach(var spammer in spammers) {
+            spammer.ClearAll();
+        }
     }
 }
