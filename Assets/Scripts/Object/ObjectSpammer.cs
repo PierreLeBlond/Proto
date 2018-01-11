@@ -11,8 +11,9 @@ public abstract class ObjectSpammer : MonoBehaviour {
 
     abstract public void Launch();
 
+    abstract public void Stop();
+
     public void ClearAll() {
-        //Remove all playgroundObject from the pattern
         foreach (var playgroundObject in _objects.ToArray()) {
             _objects.Remove(playgroundObject);
             pool.ReleaseObject(playgroundObject);

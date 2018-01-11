@@ -97,6 +97,7 @@ public class Player : MonoBehaviour {
         if(_currentStateId > 0)
         {
             SetState(_currentStateId - 1);
+            objectManager.Stop();
             objectManager.Clear();
             objectManager.Launch();
         }
@@ -110,6 +111,7 @@ public class Player : MonoBehaviour {
         if(_currentStateId < _maxStateId)
         {
             SetState(_currentStateId + 1);
+            objectManager.Stop();
             objectManager.Clear();
             objectManager.Launch();
         }

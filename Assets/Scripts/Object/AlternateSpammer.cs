@@ -4,12 +4,23 @@ using System.Collections.Generic;
 
 public sealed class AlternateSpammer : ObjectSpammer {
 
+    private List<IEnumerator>             _coroutines = new List<IEnumerator>();
+
     public override void Launch() {
         //Launch a bunch of playgroundObject with a specific pattern
         float velocity = Random.Range(2.0f, 4.0f);
         float xOffset = Random.Range(1.0f, 2.0f);
         for(int i = 0; i < _objectCount/3; ++i) {
-            StartCoroutine(SpamObject(i, velocity, xOffset));
+            IEnumerator coroutine = SpamObject(i, velocity, xOffset);
+            _coroutines.Add(coroutine);
+            StartCoroutine(coroutine);
+        }
+    }
+
+    public override void Stop() {
+        foreach (var coroutine in _coroutines.ToArray()) {
+            StopCoroutine(coroutine);
+            _coroutines.Remove(coroutine);
         }
     }
 
