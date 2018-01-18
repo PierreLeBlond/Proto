@@ -6,7 +6,7 @@ public static class Define {
     public const string Key = "mouse 0";
 }
 
-public class PlayerState {
+public class PlayerState : MonoBehaviour {
 
     public SpriteState               sprite;
     public int                       spriteId;
@@ -24,10 +24,7 @@ public class PlayerState {
 
     public void Update()
     {
-        control.Update();
+        //control.Update();
         smoke.Update();
     }
 }
-
-
-

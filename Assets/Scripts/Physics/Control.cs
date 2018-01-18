@@ -1,22 +1,10 @@
 using UnityEngine;
 using System.Collections;
 
-public class Control {
+public abstract class Control : MonoBehaviour {
 
-    protected Rigidbody         _body;
-    protected BoxCollider       _mouseCollider;
+    public Rigidbody         body;
+    public BoxCollider       mouseCollider;
 
-    public Control(Rigidbody body, BoxCollider mouseCollider)
-    {
-        _body = body;
-        _mouseCollider = mouseCollider;
-    }
-
-    public virtual void Init() {
-    }
-
-    public virtual void Update() {
-    }
+    public abstract void Init();
 }
-
-

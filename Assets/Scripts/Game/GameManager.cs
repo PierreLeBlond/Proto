@@ -4,6 +4,8 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour {
 
+    public TimeManager              timeManager;
+
     public Player                   player;
     public ObjectManager            objectManager;
     public Count                    count;
@@ -42,7 +44,7 @@ public class GameManager : MonoBehaviour {
         _gameOver = false;
         objectManager.Clear();
         objectManager.Launch();
-        player.SetLevel(1);
+        player.SetLevel(0);
         count.Reset();
         gameOver.SetActive(false);
     }
@@ -56,14 +58,14 @@ public class GameManager : MonoBehaviour {
         gameCamera.gameObject.SetActive(false);
         menuCamera.gameObject.SetActive(true);
         mainMenu.SetActive(true);
-        Time.timeScale = 0.0f;
+        timeManager.StopTime();
     }
 
     private void PlayGame() {
         gameCamera.gameObject.SetActive(true);
         menuCamera.gameObject.SetActive(false);
         mainMenu.SetActive(false);
-        Time.timeScale = 1.0f;
+        timeManager.ResetTime();
     }
 
     public void Resume() {

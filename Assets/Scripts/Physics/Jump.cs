@@ -22,24 +22,21 @@ public class Jump : Control {
     public float                fallHalfDistance = 2.0f;
 
     private int                 _nbJump = 0;
-
     private Phase               _phase = Phase.SLEEPING;
-
     private float               _currentGravity;
 
-    public Jump(Rigidbody body, BoxCollider mouseCollider) : base(body, mouseCollider) {}
-
     public override void Init() {
-        _currentGravity = gravity;
-        _body.GetComponent<Gravity>().enabled = false;
-        _body.transform.localEulerAngles = new Vector3(0, 0, 0);
+        //_currentGravity = gravity;
+        Break();
+        body.GetComponent<Gravity>().enabled = false;
+        body.transform.localEulerAngles = new Vector3(0, 0, 0);
     }
 
     public void Launch() {
         _nbJump++;
         _phase = Phase.GOINGUP;
         _currentGravity = getGravity(maxHight, speed, maxHalfDistance);
-        _body.velocity = getInitialVerticalSpeed(maxHight, speed, maxHalfDistance)*_body.transform.up*_body.transform.lossyScale.y;
+        body.velocity = getInitialVerticalSpeed(maxHight, speed, maxHalfDistance)*body.transform.up*body.transform.lossyScale.y;
     }
 
     public void Break() {
@@ -54,7 +51,7 @@ public class Jump : Control {
         return (-2.0f*hight*horizontalSpeed*horizontalSpeed)/(halfDistance*halfDistance);
     }
 
-    public override void Update() {
+    public void Update() {
         if(Input.GetKeyDown(Define.Key) && _nbJump < maxJump)
         {
             Launch();
@@ -64,18 +61,22 @@ public class Jump : Control {
             Break();
         }
 
-        if(_phase == Phase.GOINGUP && _body.velocity.y < 0)
+        if(_phase == Phase.GOINGUP && body.velocity.y < 0)
         {
+            Debug.Log("going down");
             _phase = Phase.GOINDOWN;
             _currentGravity = getGravity(maxHight, speed, fallHalfDistance);
         }
-        else if(_phase == Phase.GOINDOWN && _body.transform.localPosition.y <= -3.1f)
+        else if(_phase == Phase.GOINDOWN && body.transform.localPosition.y <= -3.1f)
         {
+            Debug.Log("idle");
             _phase = Phase.SLEEPING;
             _nbJump = 0;
         }
+    }
 
+    public void FixedUpdate () {
         //Apply custom gravity
-        _body.AddForce(_body.transform.up * _body.transform.lossyScale.y * _currentGravity);
+        body.AddForce(body.transform.up * body.transform.lossyScale.y * _currentGravity);
     }
 }
