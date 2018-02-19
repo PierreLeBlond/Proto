@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Gravity : MonoBehaviour {
 
-    public bool                     enabled = true;
+    public bool                     isEnabled = true;
     public Vector3                  direction;//Local direction of gravity
     public float                    strengh = -9.81f;
 
@@ -14,7 +14,7 @@ public class Gravity : MonoBehaviour {
     }
 
     public virtual void FixedUpdate() {
-        if(enabled) {
+        if(isEnabled) {
             _body.AddRelativeForce(strengh*direction);
         }
     }

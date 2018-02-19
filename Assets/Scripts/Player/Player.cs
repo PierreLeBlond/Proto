@@ -14,7 +14,8 @@ public class Player : MonoBehaviour {
     public Rigidbody                body;
     public BoxCollider              mouseCollider;
 
-    public ParticleSystem           levelUpEffect;
+    public Animation                levelUpEffect;
+    public Animation                levelDownEffect;
 
     //private SpriteState             _spriteState;
     //private SmokeState              _smokeState;
@@ -86,7 +87,6 @@ public class Player : MonoBehaviour {
         }
         _currentStateId = state;
 
-        levelUpEffect.Play();
         _currentState = states[_currentStateId];
         _currentState.gameObject.SetActive(true);
         _currentState.Init();
@@ -107,10 +107,12 @@ public class Player : MonoBehaviour {
     public void LevelDown() {
         if(_currentStateId > 0)
         {
+            levelDownEffect.Play();
             SetState(_currentStateId - 1);
-            objectManager.Stop();
-            objectManager.Clear();
-            objectManager.Launch();
+            timeManager.SlowTime(.05f, 2f);
+            //objectManager.Stop();
+            //objectManager.Clear();
+            //objectManager.Launch();
         }
         else
         {
@@ -121,6 +123,7 @@ public class Player : MonoBehaviour {
     public void LevelUp() {
         if(_currentStateId < _maxStateId)
         {
+            levelUpEffect.Play();
             SetState(_currentStateId + 1);
             timeManager.SlowTime(.05f, 2f);
             //objectManager.Stop();

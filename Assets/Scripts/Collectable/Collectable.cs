@@ -8,7 +8,5 @@ public class Collectable : MonoBehaviour {
     }
 
     public virtual void Activate(Player player) {
-
     }
 }
-

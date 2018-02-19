@@ -21,7 +21,6 @@ public class GameManager : MonoBehaviour {
     private bool                    _gameOver = false;
     private bool                    _play = false;
     private bool                    _pause = false;
-    private bool                    _hasStarted = false;
 
     public void Start() {
         Physics.IgnoreLayerCollision(9, 9);

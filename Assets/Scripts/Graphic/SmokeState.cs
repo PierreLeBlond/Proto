@@ -13,17 +13,17 @@ public class SmokeState : MonoBehaviour {
         {
           case 0 :
             _smoke.gameObject.SetActive(true);
-            _smoke.transform.localPosition = new Vector3(-0.5f, -0.4f, 0.0f);
+            _smoke.transform.localPosition = new Vector3(-0.2f, -0.5f, 0.0f);
             _smoke.Stop();
             break;
           case 1 :
             _smoke.gameObject.SetActive(true);
-            _smoke.transform.localPosition = new Vector3(-0.5f, -0.4f, 0.0f);
+            _smoke.transform.localPosition = new Vector3(-0.5f, -0.25f, 0.0f);
             _smoke.Stop();
             break;
           case 2 :
             _smoke.gameObject.SetActive(true);
-            _smoke.transform.localPosition = new Vector3(0.25f, -1.5f, 0.0f);
+            _smoke.transform.localPosition = new Vector3(0.25f, -1.0f, 0.0f);
             _smoke.Play();
             break;
           case 3 :
@@ -57,4 +57,3 @@ public class SmokeState : MonoBehaviour {
             _smoke.Stop();
     }
 }
-
