@@ -4,8 +4,10 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour {
 
+    public TimeManager              timeManager;
+
     public Player                   player;
-    public ItemManager              itemManager;
+    public ObjectManager            objectManager;
     public Count                    count;
 
     public GameObject               mainMenu;
@@ -21,8 +23,8 @@ public class GameManager : MonoBehaviour {
     private bool                    _pause = false;
 
     public void Start() {
+        Physics.IgnoreLayerCollision(9, 9);
         PauseGame();
-        itemManager.SpamItems();
         gameOver.SetActive(false);
         pause.SetActive(false);
     }
@@ -39,11 +41,15 @@ public class GameManager : MonoBehaviour {
 
     public void Restart() {
         _gameOver = false;
-        itemManager.Clean();
-        itemManager.SpamItems();
-        player.SetLevel(1);
+        objectManager.Clear();
+        objectManager.Launch();
+        player.SetLevel(0);
         count.Reset();
         gameOver.SetActive(false);
+    }
+
+    public void StartGame() {
+        objectManager.Launch();
     }
 
 
@@ -51,14 +57,14 @@ public class GameManager : MonoBehaviour {
         gameCamera.gameObject.SetActive(false);
         menuCamera.gameObject.SetActive(true);
         mainMenu.SetActive(true);
-        Time.timeScale = 0.0f;
+        timeManager.StopTime();
     }
 
     private void PlayGame() {
         gameCamera.gameObject.SetActive(true);
         menuCamera.gameObject.SetActive(false);
         mainMenu.SetActive(false);
-        Time.timeScale = 1.0f;
+        timeManager.ResetTime();
     }
 
     public void Resume() {
@@ -76,7 +82,7 @@ public class GameManager : MonoBehaviour {
         } else if(_pause) {
             Resume();
         } else {
-            Start();
+            StartGame();
         }
         _play = true;
         PlayGame();
@@ -96,4 +102,3 @@ public class GameManager : MonoBehaviour {
         PauseGame();
     }
 }
-

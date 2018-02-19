@@ -1,11 +1,11 @@
 using UnityEngine;
 using System.Collections;
 
-public class Coin : Collectable {
+public class Obstacle : Collectable {
 
     public override void Activate(Player player)
     {
-        player.AddPoint();
-        gameObject.SetActive(false);
+        player.LevelDown();
+        //gameObject.SetActive(false);
     }
 }

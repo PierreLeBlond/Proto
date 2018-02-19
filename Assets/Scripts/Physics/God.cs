@@ -5,26 +5,22 @@ using System.Collections;
 
 public class God : Control {
 
+    public Player           player;
+
+    private float           slope = 10.0f;
+    private float           drag = -2.0f;
+
     private Vector2         _target;
-    private float           _mass = 1.0f;
-    private float           _slope = 10.0f;
-    private float           _drag = -2.0f;
-
-    private Player          _player;
-
-    public God(Rigidbody body, BoxCollider mouseCollider, Player player) : base(body, mouseCollider){
-        _player = player;
-    }
 
     public override void Init()
     {
-        _body.useGravity = false;
-        _body.velocity = new Vector3(0.0f, 0.0f, 0.0f);
+        body.GetComponent<Gravity>().enabled = false;
+        body.velocity = new Vector3(0.0f, 0.0f, 0.0f);
         _target = new Vector3(0.0f, 0.0f, 0.0f);
-        _body.transform.localEulerAngles = new Vector3(0, 0, 0);
+        body.transform.localEulerAngles = new Vector3(0, 0, 0);
     }
 
-    public override void Update() {
+    public void Update() {
         if(Input.GetKey(Define.Key))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -34,16 +30,17 @@ public class God : Control {
             if(hasHit)
             {
                 if(raycastHit.collider.CompareTag("Collectable")) {
-                    raycastHit.collider.GetComponent<Collectable>().Activate(_player);
+                    raycastHit.collider.GetComponent<Collectable>().Activate(player);
                 }
             }
         }
+    }
 
-        float distance = _target.y - _body.transform.localPosition.y;
-        float thrust = _slope * distance;
-
+    public void FixedUpdate () {
+        float distance = _target.y - body.transform.localPosition.y;
+        float thrust = slope * distance;
         //Physics is awesome !
-        _body.AddForce(_body.transform.up * thrust);
-        _body.AddForce(_drag * _body.velocity);
+        body.AddForce(body.transform.up * thrust);
+        body.AddForce(drag * body.velocity);
     }
 }

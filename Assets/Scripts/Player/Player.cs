@@ -5,18 +5,21 @@ public class Player : MonoBehaviour {
 
     public Count                    count;
 
+    public PlayerState[]           states;
+
     public GameManager              gameManager;
+    public TimeManager              timeManager;
 
-    public ItemManager              itemManager;
-
+    public ObjectManager            objectManager;
     public Rigidbody                body;
-
     public BoxCollider              mouseCollider;
 
-    private SpriteState             _spriteState;
-    private SmokeState              _smokeState;
+    public Animation                levelUpEffect;
+    public Animation                levelDownEffect;
 
-    private PlayerState[]           _states = new PlayerState[4];
+    //private SpriteState             _spriteState;
+    //private SmokeState              _smokeState;
+
     private PlayerState             _currentState;
 
     private int                     _currentStateId;
@@ -24,25 +27,29 @@ public class Player : MonoBehaviour {
 
     void Start() {
 
-        _spriteState = GetComponent<SpriteState>();
-        _smokeState = GetComponent<SmokeState>();
+        /*_spriteState = GetComponent<SpriteState>();
+        _smokeState = GetComponent<SmokeState>();*/
 
-        for(int i = 0; i < _states.Length; ++i)
+        /*for(int i = 0; i < states.Length; ++i)
         {
-            _states[i] = new PlayerState();
-            _states[i].sprite = _spriteState;
-            _states[i].smoke =  _smokeState;
-            _states[i].spriteId = i;
+            states[i] = new PlayerState();
+            states[i].sprite = _spriteState;
+            states[i].smoke =  _smokeState;
+            states[i].spriteId = i;
+        }*/
+
+        _maxStateId = states.Length - 1;
+
+        foreach (var state in states) {
+            state.gameObject.SetActive(false);
         }
 
-        _maxStateId = _states.Length - 1;
+        /*states[0].control = new Jump(body, mouseCollider);
+        states[1].control = new Jetpack(body, mouseCollider);
+        states[2].control = new Rocket(body, mouseCollider);
+        states[3].control = new God(body, mouseCollider, this);*/
 
-        _states[0].control = new Jump(body, mouseCollider);
-        _states[1].control = new Jetpack(body, mouseCollider);
-        _states[2].control = new Rocket(body, mouseCollider);
-        _states[3].control = new God(body, mouseCollider, this);
-
-        SetState(1);
+        SetState(0);
     }
 
     void FixedUpdate () {
@@ -66,18 +73,22 @@ public class Player : MonoBehaviour {
         _currentState.Update();
     }
 
-    void OnTriggerEnter(Collider intruder)
+    void OnTriggerEnter(Collider collider)
     {
-        if(intruder.CompareTag("Collectable") && _currentStateId != 3) {
-            intruder.GetComponent<Collectable>().Activate(this);
+        if(collider.gameObject.CompareTag("Collectable") && _currentStateId != 3) {
+            collider.gameObject.GetComponent<Collectable>().Activate(this);
         }
     }
 
     void SetState(int state)
     {
+        if(_currentState) {
+            _currentState.gameObject.SetActive(false);
+        }
         _currentStateId = state;
 
-        _currentState = _states[_currentStateId];
+        _currentState = states[_currentStateId];
+        _currentState.gameObject.SetActive(true);
         _currentState.Init();
     }
 
@@ -96,8 +107,12 @@ public class Player : MonoBehaviour {
     public void LevelDown() {
         if(_currentStateId > 0)
         {
+            levelDownEffect.Play();
             SetState(_currentStateId - 1);
-            itemManager.Clean();
+            timeManager.SlowTime(.05f, 2f);
+            //objectManager.Stop();
+            //objectManager.Clear();
+            //objectManager.Launch();
         }
         else
         {
@@ -108,8 +123,12 @@ public class Player : MonoBehaviour {
     public void LevelUp() {
         if(_currentStateId < _maxStateId)
         {
+            levelUpEffect.Play();
             SetState(_currentStateId + 1);
-            itemManager.Clean();
+            timeManager.SlowTime(.05f, 2f);
+            //objectManager.Stop();
+            //objectManager.Clear();
+            //objectManager.Launch();
         }
     }
 
@@ -122,4 +141,3 @@ public class Player : MonoBehaviour {
     }
 
 }
-
